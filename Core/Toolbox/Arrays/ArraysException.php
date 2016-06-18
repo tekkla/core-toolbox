@@ -1,14 +1,15 @@
 <?php
-namespace Core\Toolbox\Convert;
+namespace Core\Toolbox\Arrays;
 
 /**
- * ConvertException.php
+ * ArraysException.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
  * @copyright 2016
  * @license MIT
  */
-class ConvertException extends \Exception
+class ArraysException extends \Exception
 {
+
 }
 

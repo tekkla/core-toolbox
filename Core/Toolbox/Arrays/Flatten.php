@@ -8,8 +8,81 @@ namespace Core\Toolbox\Arrays;
  * @copyright 2016
  * @license MIT
  */
-class Flatten
+class Flatten extends AbstractArray
 {
+
+    /**
+     *
+     * @var bool
+     */
+    private $glue = '.';
+
+    /**
+     *
+     * @var bool
+     */
+    private $preserve_flagged_arrays = false;
+
+    /**
+     * Sets glue
+     *
+     * @param string $glue
+     */
+    public function setGlue(string $glue)
+    {
+        $allowed_glues = [
+            '.',
+            '_',
+            '-'
+        ];
+
+        if (!in_array($glue, $allowed_glues)) {
+            Throw new ArraysException('This glues "%s" is not permitted. Allowed glues are "%s"', $glue, implode(', ', $allowed_glues));
+        }
+
+        $this->glue = $glue;
+    }
+
+    /**
+     * Retuns glue
+     *
+     * @return string
+     */
+    public function getGlue(): string
+    {
+        return $this->glue;
+    }
+
+    /**
+     * Sets preserve flagged arrays Flag
+     *
+     * @param bool $flag
+     */
+    public function setPreserveFlaggedArraysFlag(bool $flag)
+    {
+        $this->preserve_flagged_arrays = $flag;
+    }
+
+    /**
+     * Returns preserve flagged arrays Flag
+     *
+     * @return bool
+     */
+    public function getPreserveFlaggedArraysFlag(): bool
+    {
+        return $this->preserve_flagged_arrays;
+    }
+
+    /**
+     * Flattens a multidimensional array by using the set glue
+     *
+     * @param string $prefix
+     *            Optional prefix to prepend to flattened keys
+     */
+    public function flatten(string $prefix = '')
+    {
+        return $this->flatten($this->array, $prefix);
+    }
 
     /**
      * Flattens a multidimensional array by using a glue
@@ -25,7 +98,7 @@ class Flatten
      *
      * @return string|array
      */
-    function flatten(array $array, $prefix = '', $glue = '.', $preserve_flagged_arrays = false)
+    private function process(array $array, $prefix = '')
     {
         $result = [];
 
@@ -35,13 +108,13 @@ class Flatten
             if (is_array($value)) {
 
                 // __preserve key set tha signals us to store the array as it is?
-                if ($preserve_flagged_arrays && array_key_exists('__preserve', $value)) {
-                    $result[$prefix . $key . $glue . 'array'] = $value;
+                if ($this->preserve_flagged_arrays && array_key_exists('__preserve', $value)) {
+                    $result[$prefix . $key . $this->glue . 'array'] = $value;
                     unset($value['__preserve']);
                 }
 
                 // Flatten the array
-                $result = $result + $this->flatten($value, $prefix . $key . $glue, $glue, $preserve_flagged_arrays);
+                $result = $result + $this->process($value, $prefix . $key . $this->glue, $this->glue, $this->preserve_flagged_arrays);
             }
             else {
                 $result[$prefix . $key] = $value;

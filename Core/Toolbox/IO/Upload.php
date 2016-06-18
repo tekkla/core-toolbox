@@ -1,6 +1,8 @@
 <?php
 namespace Core\Toolbox\IO;
 
+use Core\Toolbox\Converter\Filesize;
+
 /**
  * Upload.php
  *
@@ -8,50 +10,88 @@ namespace Core\Toolbox\IO;
  * @copyright 2016
  * @license MIT
  */
-class Upload
+class Upload extends AbstractFile
 {
 
     /**
      *
-     * @var Files
+     * @var string
      */
-    private $files;
+    private $destination = '';
 
-    public function __construct(Files $files)
+    /**
+     *
+     * @var unknown
+     */
+    private $check_exists = true;
+
+    /**
+     * Sets destination
+     *
+     * @param string $destination
+     *            Destination of the uploaded file
+     */
+    public function setDestination(string $destination)
     {
-        $this->files = $files;
+        $this->destination = $destination;
     }
 
     /**
-     * Returns the maximum size for uploads in bytes.
+     * Retruns destination
+     *
+     * @return string
+     */
+    public function getDestination(): string
+    {
+        return $this->destination;
+    }
+
+    /**
+     * Set flag to check if the destination already exists
+     *
+     * @param bool $check_exists
+     */
+    public function setCheckExists(bool $check_exists)
+    {
+        $this->check_exists = $check_exists;
+    }
+
+    /**
+     * Returns check destination already exists flag
+     *
+     * @return bool
+     */
+    public function getCheckExists(): bool
+    {
+        return $this->check_exists;
+    }
+
+    /**
+     * Returns the maximum size for uploads in bytes
      *
      * @return int
      */
     public function getMaximumFileUploadSize()
     {
-        return $this->files->convertPHPSizeToBytes(ini_get('upload_max_filesize'));
+        $converter = new Filesize(ini_get('upload_max_filesize'));
+
+        return $converter->phpSizeToBytes();
     }
 
     /**
-     * Same as php's core move_uploaded_file extended with destination file exists
-     * check.
-     * Fails this check an exception is throwm.
+     * Same as php's core move_uploaded_file extended with optional destination file exists check.
      *
-     * @param string $source            
-     * @param string $destination            
-     * @param bool $check_exists            
-     *
-     * @throws FileException
+     * @throws FileException when exists check is requested and destination already exists
      *
      * @return boolean
      */
-    public function moveFile(string $source, string $destination, bool $check_exists = true): bool
+    public function moveFile(): bool
     {
-        if ($check_exists == true && $this->files->exists($destination)) {
-            Throw new FileException('File already exits');
+        if ($this->check_exists == true && file_exists($this->destination)) {
+            Throw new FileException(sprintf('Destinationfile "%s" already exits.', $this->destination));
         }
-        
-        return move_uploaded_file($source, $destination);
+
+        return move_uploaded_file($this->filename, $this->destination);
     }
 }
 

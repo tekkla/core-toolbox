@@ -1,6 +1,8 @@
 <?php
 namespace Core\Toolbox\IO;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * AbstractFile.php
  *
@@ -16,6 +18,12 @@ abstract class AbstractFile
      * @var string
      */
     protected $filename = '';
+
+    /**
+     *
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * Constructor
@@ -47,6 +55,16 @@ abstract class AbstractFile
     public function getFilename(): string
     {
         return $this->filename;
+    }
+
+    /**
+     * Sets logger service
+     *
+     * @param \Psr\Log\LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }
 

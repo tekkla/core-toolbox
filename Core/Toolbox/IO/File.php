@@ -2,7 +2,7 @@
 namespace Core\Toolbox\IO;
 
 use Psr\Log\LoggerInterface;
-use Core\Strings\Strings;
+use Core\Toolbox\Strings\Normalize;
 
 /**
  * File.php
@@ -88,7 +88,7 @@ class File extends AbstractFile
      *
      * @return boolean
      */
-    public function exists( $logger = null): bool
+    public function exists(LoggerInterface $logger = null): bool
     {
         $filename = $this->replaceDirectorySeperator($this->filename);
         $exists = file_exists($filename);
@@ -100,40 +100,7 @@ class File extends AbstractFile
         return $exists;
     }
 
-    /**
-     * Converts a filesize (bytes as integer) into a human readable string format.
-     * For example: 1024 => 1 KByte
-     *
-     * @param int $bytes
-     *
-     * @throws FileException
-     *
-     * @return string unknown
-     */
-    public function convFilesize($bytes)
-    {
-        if (!$bytes == '0' . $bytes) {
-            Throw new FileException('Wrong parameter type');
-        }
 
-        if ($bytes > 0) {
-            $unit = intval(log($bytes, 1024));
-            $units = [
-                'Bytes',
-                'KByte',
-                'MByte',
-                'GByte',
-                'TByte',
-                'PByte'
-            ];
-
-            if (array_key_exists($unit, $units) === true) {
-                return sprintf('%d %s', $bytes / pow(1024, $unit), $units[$unit]);
-            }
-        }
-
-        return $bytes;
-    }
 
     /**
      * Cleans up a filename string from all characters which can make trouble on filesystems.
@@ -146,18 +113,14 @@ class File extends AbstractFile
      */
     public function clean($delimiter = '-')
     {
-        static $string;
-
-        if (!isset($string)) {
-            $string = new Strings();
-        }
-
         // The fileextension should not be normalized.
         if (strrpos($this->filename, '.') !== false) {
             list ($name, $extension) = explode('.', $this->filename);
         }
 
-        $name = $string->normalize($name);
+        $normalize = new Normalize($name);
+
+        $name = $normalize->normalize();
         $name = preg_replace('/[^[:alnum:]\-]+/', $delimiter, $name);
         $name = preg_replace('/' . $delimiter . '+/', $delimiter, $name);
         $name = rtrim($name, $delimiter);
@@ -214,34 +177,5 @@ class File extends AbstractFile
         }
 
         return $filenames;
-    }
-
-    /**
-     * Transforms the php.ini notation for numbers (like '2M') to an integer (2*1024*1024 in case of 2M)
-     *
-     * @var $size string Size inas string (like '2M')
-     *
-     * @return int Size in bytes
-     */
-    public function convertPHPSizeToBytes($size)
-    {
-        $suffix = substr($size, -1);
-        $value = substr($size, 0, -1);
-
-        switch (strtoupper($suffix)) {
-            case 'P':
-                $value *= 1024;
-            case 'T':
-                $value *= 1024;
-            case 'G':
-                $value *= 1024;
-            case 'M':
-                $value *= 1024;
-            case 'K':
-                $value *= 1024;
-                break;
-        }
-
-        return $value;
     }
 }

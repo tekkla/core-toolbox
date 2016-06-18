@@ -1,5 +1,5 @@
 <?php
-namespace Core\Toolbox\Convert;
+namespace Core\Toolbox\Converter;
 
 /**
  * ObjectToArray.php
@@ -8,7 +8,7 @@ namespace Core\Toolbox\Convert;
  * @copyright 2016
  * @license MIT
  */
-class ObjectToArray extends AbstractConvert
+class ObjectToArray extends AbstractConverter
 {
 
     /**
@@ -19,10 +19,10 @@ class ObjectToArray extends AbstractConvert
     function convert(): array
     {
         if (!is_object($this->value)) {
-            Throw new ConvertException('The given value is no object.');
+            Throw new ConverterException('The given value is no object.');
         }
 
-        return $this->toArray($this->value);
+        return $this->result = $this->toArray($this->value);
     }
 
     /**

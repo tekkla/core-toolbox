@@ -1,14 +1,14 @@
 <?php
-namespace Core\Toolbox\Convert;
+namespace Core\Toolbox\Converter;
 
 /**
- * AbstractConvert.php
+ * AbstractConverter.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
  * @copyright 2016
  * @license MIT
  */
-abstract class AbstractConvert
+abstract class AbstractConverter
 {
 
     /**
@@ -16,6 +16,12 @@ abstract class AbstractConvert
      * @var mixed
      */
     protected $value;
+
+    /**
+     *
+     * @var mixed
+     */
+    protected $result;
 
     /**
      * Constructor
@@ -47,6 +53,24 @@ abstract class AbstractConvert
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Returns conversion result
+     *
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * Resets/unsets result
+     */
+    public function resetResult()
+    {
+        unset($this->result);
     }
 }
 

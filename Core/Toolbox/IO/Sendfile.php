@@ -1,8 +1,6 @@
 <?php
 namespace Core\Toolbox\IO;
 
-use Psr\Log\LoggerInterface;
-
 /**
  * Sendfile.php
  *
@@ -10,23 +8,8 @@ use Psr\Log\LoggerInterface;
  * @copyright 2016
  * @license MIT
  */
-class Sendfile
+class Sendfile extends AbstractFile
 {
-
-    /**
-     * Files functions wrapped by Files class
-     *
-     * @var Files
-     */
-    private $files;
-
-    /**
-     * File to send (full path)
-     *
-     * @var string
-     */
-    private $file = '';
-
     /**
      * Files content type
      *
@@ -63,53 +46,18 @@ class Sendfile
     private $logger = null;
 
     /**
-     * Constructor
-     *
-     * @param Files $files            
-     */
-    public function __construct(Files $files, string $file = null)
-    {
-        $this->files = $files;
-        
-        if (isset($file)) {
-            $this->setFile($file);
-        }
-    }
-
-    /**
-     * Returns the file
-     *
-     * @return string
-     */
-    public function getFile(): string
-    {
-        return $this->file;
-    }
-
-    /**
-     * Sets file
-     *
-     * @param string $file
-     *            File to send (full path)
-     */
-    public function setFile(string $file)
-    {
-        $this->file = $file;
-    }
-
-    /**
      * Returns content type of file
      *
      * Tries to autodetect content type when no type is set.
      *
      * @return the $content_type
      */
-    public function getContent_type(): string
+    public function getContentType(): string
     {
         if (empty($this->content_type) && !empty($this->file)) {
-            $this->content_type = $this->files->getMimeType($this->file);
+            $this->content_type = $this->getMimeType($this->file);
         }
-        
+
         return $this->content_type;
     }
 
@@ -156,7 +104,7 @@ class Sendfile
 
     /**
      *
-     * @param string $name            
+     * @param string $name
      */
     public function setName($name)
     {
@@ -187,34 +135,29 @@ class Sendfile
     }
 
     /**
-     * Sets logger service
-     *
-     * @param \Psr\Log\LoggerInterface $logger            
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    /**
      * Sends file to browser
      */
     public function send()
     {
-        
+
         // Check file exists!
-        $this->files->exists($this->file, $this->logger);
-        
+        $file = new File($this->filename);
+
+        if (!$file->exists($this->logger)) {
+            Throw new FileException(sprintf('File "%s" not found.'));
+        }
+
+
         // No content type provided?
         if (empty($this->content_type)) {
-            $this->content_type = $this->files->getMimeType($this->file);
+            $this->content_type = $this->getMimeType($this->file);
         }
-        
+
         // Do we have to find out the filename by our own?
         if (empty($this->name)) {
             $this->name = basename($this->file);
         }
-        
+
         // Send headers
         $headers = [
             'Content-type: ' . $this->content_type,
@@ -223,26 +166,26 @@ class Sendfile
             'Content-Length: ' . filesize($this->file),
             'Accept-Ranges: bytes'
         ];
-        
+
         foreach ($headers as $header) {
             header($header);
         }
-        
+
         if ($this->download_rate > 0) {
-            
+
             flush();
-            
+
             // Open file
             $stream = fopen($this->file, "r");
-            
+
             while (!feof($stream)) {
-                
+
                 // Send current file part to the browser
                 print fread($stream, round($this->download_rate * 1024));
-                
+
                 // Flush content to the browser
                 flush();
-                
+
                 // Sleep one second
                 sleep(1);
             }
