@@ -10,7 +10,7 @@ namespace Core\Toolbox\IO;
  */
 class ClassfileExists
 {
-    
+
     use ReplaceDirectorySeperatorTrait;
 
     /**
@@ -53,7 +53,7 @@ class ClassfileExists
     /**
      * Sets the basedir to be prepended to classname.php
      *
-     * @param string $basedir            
+     * @param string $basedir
      */
     public function setBasedir(string $basedir)
     {
@@ -77,22 +77,22 @@ class ClassfileExists
      *
      * @return boolean
      */
-    public function check(): bool
+    public function exists(): bool
     {
         // convert namespace into path
         $class = str_replace('\\', '/', $this->class);
-        
+
         // append .php?
         if (strpos($class, '.php') === false) {
             $class .= '.php';
         }
-        
+
         $class = $this->replaceDirectorySeperator($class);
-        
+
         if (!empty($this->basedir)) {
             $class = $this->basedir .= DIRECTORY_SEPARATOR;
         }
-        
+
         return file_exists($class);
     }
 }
