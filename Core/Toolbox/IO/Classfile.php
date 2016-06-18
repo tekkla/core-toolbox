@@ -2,13 +2,13 @@
 namespace Core\Toolbox\IO;
 
 /**
- * ClassfileExists.php
+ * Classfile.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
  * @copyright 2016
  * @license MIT
  */
-class ClassfileExists
+class Classfile
 {
 
     use ReplaceDirectorySeperatorTrait;
