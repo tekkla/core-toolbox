@@ -16,7 +16,7 @@ class IsAssoc extends AbstractArray
      *
      * @return bool
      */
-    function check(): bool
+    public function isAssoc(): bool
     {
         if (empty($this->array)) {
             return false;
