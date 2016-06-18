@@ -80,7 +80,7 @@ class Classfile
     public function exists(): bool
     {
         // convert namespace into path
-        $class = str_replace('\\', '/', $this->class);
+        $class = str_replace('\\', '/', $this->classname);
 
         // append .php?
         if (strpos($class, '.php') === false) {
