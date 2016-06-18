@@ -8,7 +8,7 @@ namespace Core\Toolbox\Arrays;
  * @copyright 2016
  * @license MIT
  */
-class IsAssoc
+class IsAssoc extends AbstractArray
 {
 
     /**
@@ -16,7 +16,7 @@ class IsAssoc
      *
      * @return bool
      */
-    function isAssoc(): bool
+    function check(): bool
     {
         if (empty($this->array)) {
             return false;
