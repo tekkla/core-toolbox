@@ -10,6 +10,8 @@ namespace Core\Toolbox\IO;
  */
 class Sendfile extends AbstractFile
 {
+    use GetMimeTypeTrait;
+
     /**
      * Files content type
      *
@@ -39,11 +41,11 @@ class Sendfile extends AbstractFile
     private $download_rate = 0;
 
     /**
-     * Optional logging service
+     * Header stack
      *
-     * @var LoggerInterface
+     * @var array
      */
-    private $logger = null;
+    private $headers = [];
 
     /**
      * Returns content type of file
@@ -67,7 +69,7 @@ class Sendfile extends AbstractFile
      * @param string $content_type
      *            The content type of file
      */
-    public function setContentType($content_type)
+    public function setContentType(string $content_type)
     {
         $this->content_type = $content_type;
     }
@@ -94,19 +96,21 @@ class Sendfile extends AbstractFile
     }
 
     /**
+     * Returns set invidual filename
      *
-     * @return the $name
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
+     * Set name of download
      *
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -135,48 +139,74 @@ class Sendfile extends AbstractFile
     }
 
     /**
+     * Adds a header
+     *
+     * @param string $header
+     */
+    public function addHeader(string $header)
+    {
+        $this->headers[] = $header;
+    }
+
+    /**
+     * Adds a stack of headers
+     *
+     * @param array $headers
+     */
+    public function addHeaders(array $headers)
+    {
+        foreach ($headers as $header) {
+            $this->addHeader($header);
+        }
+    }
+
+    /**
      * Sends file to browser
      */
     public function send()
     {
+        if (!file_exists($this->filename)) {
 
-        // Check file exists!
-        $file = new File($this->filename);
+            $error = sprintf('File "%s" not found.');
 
-        if (!$file->exists($this->logger)) {
-            Throw new FileException(sprintf('File "%s" not found.'));
+            if (isset($this->logger)) {
+                $this->logger->critical($error);
+            }
+
+            Throw new FileException($error);
         }
-
 
         // No content type provided?
         if (empty($this->content_type)) {
-            $this->content_type = $this->getMimeType($this->file);
+            $this->content_type = $this->getMimeType($this->filename);
         }
 
         // Do we have to find out the filename by our own?
         if (empty($this->name)) {
-            $this->name = basename($this->file);
+            $this->name = basename($this->filename);
         }
 
         // Send headers
-        $headers = [
+        $this->addHeaders([
             'Content-type: ' . $this->content_type,
             'Content-Disposition: ' . $this->inline ? 'inline' : 'attachement' . '; filename="' . $this->name . '"',
             'Content-Transfer-Encoding: binary',
-            'Content-Length: ' . filesize($this->file),
+            'Content-Length: ' . filesize($this->filename),
             'Accept-Ranges: bytes'
-        ];
+        ]);
 
-        foreach ($headers as $header) {
+        foreach ($this->headers as $header) {
             header($header);
         }
 
+        // Clean buffer!
+        ob_clean();
+        flush();
+
         if ($this->download_rate > 0) {
 
-            flush();
-
             // Open file
-            $stream = fopen($this->file, "r");
+            $stream = fopen($this->filename, "r");
 
             while (!feof($stream)) {
 
@@ -189,12 +219,12 @@ class Sendfile extends AbstractFile
                 // Sleep one second
                 sleep(1);
             }
-            fclose($this->file);
+            fclose($this->filename);
         }
         else {
-            readfile($this->file);
-            exit();
+            readfile($this->filename);
         }
+
+        exit();
     }
 }
-
