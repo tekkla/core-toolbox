@@ -8,7 +8,7 @@ namespace Core\Toolbox\IO;
  * @copyright 2016
  * @license MIT
  */
-trait GetMimetypeTrait {
+trait GetMimeTypeTrait {
 
     /**
      * Returns the mime type of a file by analyzing it's extension
@@ -18,8 +18,8 @@ trait GetMimetypeTrait {
      * It does not guarantee that the file is TRULY that of the extension that this function returns.
      *
      * @see https://gist.github.com/Erutan409/8e774dfb2b343fe78b14 Thanks to Erutan409
-     *     
-     * @param string $filename            
+     *
+     * @param string $filename
      *
      * @throws FileException
      *
@@ -722,9 +722,9 @@ trait GetMimetypeTrait {
             "zir" => "application/vnd.zul",
             "zmm" => "application/vnd.handheld-entertainment+xml"
         ];
-        
+
         $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
+
         return $mime_types[$extension] ?? 'unknown';
     }
 }
