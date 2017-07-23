@@ -42,7 +42,7 @@ abstract class AbstractArray
      *
      * @return array
      */
-    public function getValue()
+    public function getValue():array 
     {
         return $this->array;
     }

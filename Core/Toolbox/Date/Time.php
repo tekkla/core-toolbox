@@ -5,13 +5,14 @@ namespace Core\DateTime;
  * Time.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
- * @copyright 2016
+ * @copyright 2016-2017
  * @license MIT
  */
 class Time
 {
 
     const SEC_PER_DAY = 60 * 60 * 24;
+
     const SEC_PER_HOUR = 60 * 60;
 
     /**
@@ -19,15 +20,16 @@ class Time
      *
      * @param string $date
      * @param string $time
+     *
      * @return number
      */
-    public function toTimestamp($date, $time = null)
+    public function toTimestamp(string $date, string $time = ''): int
     {
-        if (! isset($time)) {
+        if (empty($time)) {
             $time = '00:00:01';
         }
-
-            // create unix_timestamp
+        
+        // create unix_timestamp
         return strtotime($date . ' ' . $time);
     }
 
@@ -35,11 +37,15 @@ class Time
      * Converts a timestamp into many date infos
      *
      * @param int $timestamp
+     *            The timestamp to convert
      * @param string $dateformat
+     *            The dateformat (Default: 'Y-m-d')
      * @param string $timeformat
-     * @return multitype:unknown string
+     *            The timeformat (Default: 'H:i')
+     *            
+     * @return array
      */
-    public function fromTimestamp($timestamp, $dateformat = 'd.m.Y', $timeformat = 'H:i')
+    public function fromTimestamp(int $timestamp, string $dateformat = 'Y-m-d', string $timeformat = 'H:i'): array
     {
         return [
             'stamp' => $timestamp,
@@ -56,33 +62,28 @@ class Time
     /**
      * Converts a date into another format
      *
-     * @param unknown $date
+     * @param string $date
      * @param string $format
+     *
      * @return string
      */
-    public function dateConversion($date, $format = 'd.m.Y')
+    public function dateConversion(string $date, string $format = 'Y-m-d'): string
     {
         return date($format, strtotime($date));
     }
 
     /**
-     * Calculates
+     * Calculates time left from an timestamp in the future
      *
-     * @param integer $timestamp
-     * @param boolean $bLeft
+     * @param int $timestamp
+     * @param bool $left
+     *
      * @return string
      */
-    public function timeLeft($timestamp, $bLeft = true)
+    public function timeLeft(int $timestamp, bool $Left = true): string
     {
-        global $txt;
-
-        if ($bLeft == true) {
-            $diff = time() - $timestamp;
-        }
-        else {
-            $diff = $timestamp;
-        }
-
+        $diff = $bLeft == true ? time() - $timestamp : $timestamp;
+        
         $showdiff = [
             "y" => 0,
             "m" => 0,
@@ -91,7 +92,7 @@ class Time
             "h" => 0,
             "min" => 0
         ];
-
+        
         while ($diff >= 31536000) {
             // 1 year = 31536000 seconds
             $diff -= 31536000;
@@ -107,25 +108,25 @@ class Time
             $diff -= 648000;
             $showdiff['w'] ++;
         }
-
+        
         while ($diff >= 86400) {
             // 1 day = 86400 seconds
             $diff -= 86400;
             $showdiff['d'] ++;
         }
-
+        
         while ($diff >= 3600) {
             // 1 hour = 3600 seconds
             $diff -= 3600;
             $showdiff['h'] ++;
         }
-
+        
         while ($diff >= 60) {
             // 1 minute = 60 seconds
             $diff -= 60;
             $showdiff['min'] ++;
         }
-
+        
         return $showdiff;
     }
 }

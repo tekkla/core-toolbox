@@ -7,7 +7,7 @@ use Core\Toolbox\Converter\Filesize;
  * Upload.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
- * @copyright 2016
+ * @copyright 2016-2017
  * @license MIT
  */
 class Upload extends AbstractFile
@@ -21,7 +21,7 @@ class Upload extends AbstractFile
 
     /**
      *
-     * @var unknown
+     * @var bool
      */
     private $check_exists = true;
 
@@ -94,4 +94,3 @@ class Upload extends AbstractFile
         return move_uploaded_file($this->filename, $this->destination);
     }
 }
-

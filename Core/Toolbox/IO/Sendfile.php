@@ -5,7 +5,7 @@ namespace Core\Toolbox\IO;
  * Sendfile.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
- * @copyright 2016
+ * @copyright 2016-2017
  * @license MIT
  */
 class Sendfile extends AbstractFile
@@ -52,7 +52,7 @@ class Sendfile extends AbstractFile
      *
      * Tries to autodetect content type when no type is set.
      *
-     * @return the $content_type
+     * @return string
      */
     public function getContentType(): string
     {
@@ -228,4 +228,3 @@ class Sendfile extends AbstractFile
         exit();
     }
 }
-

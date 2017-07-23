@@ -53,7 +53,7 @@ class Filesize extends AbstractConverter
      * @param string $format
      *            The outputformat
      *
-     * @throws ConvertException
+     * @throws ConverterException
      *
      * @return string unknown
      */
@@ -84,4 +84,3 @@ class Filesize extends AbstractConverter
         return $this->result = $this->value;
     }
 }
-

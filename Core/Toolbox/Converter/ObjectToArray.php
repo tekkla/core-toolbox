@@ -47,4 +47,3 @@ class ObjectToArray extends AbstractConverter
         return $out;
     }
 }
-

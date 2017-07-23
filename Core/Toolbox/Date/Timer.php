@@ -13,13 +13,13 @@ class Timer
 
     /**
      *
-     * @var integer
+     * @var int
      */
     private $start;
 
     /**
      *
-     * @var integer
+     * @var int
      */
     private $end;
 
@@ -38,14 +38,14 @@ class Timer
     /**
      * Starts timer and creates first checkpoint
      *
-     * @throws CoreException
+     * @throws \RuntimeException
      *
      * @return Timer
      */
     public function start()
     {
         if ($this->running) {
-            Throw new \Exception('Timer is already running.');
+            Throw new \RuntimeException('Timer is already running.');
         }
 
         $this->start = microtime(true);
@@ -58,7 +58,7 @@ class Timer
     /**
      * Stopps timer and returns difference from start
      *
-     * @throws CoreException
+     * @throws \Exception
      */
     public function stop()
     {
@@ -78,7 +78,7 @@ class Timer
      *
      * @param string $name
      */
-    public function checkpoint($name)
+    public function checkpoint(string $name)
     {
         $this->checkpoints[$name] = microtime(true) - end($this->checkpoints);
     }
@@ -88,7 +88,7 @@ class Timer
      *
      * @return integer
      */
-    private function getStart()
+    private function getStart(): int
     {
         return $this->start;
     }
