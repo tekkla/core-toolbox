@@ -81,7 +81,7 @@ class Flatten extends AbstractArray
      */
     public function flatten(string $prefix = '')
     {
-        return $this->flatten($this->array, $prefix);
+        return $this->process($this->array, $prefix);
     }
 
     /**
