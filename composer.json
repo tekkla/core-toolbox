@@ -3,7 +3,7 @@
 	"description" : "Toolbox of classes and function to check variables, manipulate arrays, do file actions and much more. It's a collection of tools that get used in some of my core libs.",
 	"require" : {
 		"php" : ">=7.0.0",
-		"psr/log" : ">=1.0.0@stable"
+		"psr/log" : ">=1.0.2@stable"
 	},
 	"repositories" : [{
 			"type" : "composer",
