@@ -1,26 +1,33 @@
 {
-  "name" : "tekkla/core-toolbox",
-  "description" : "Toolbox of classes and function to check variables, manipulate arrays, do file actions and much more. It's a collection of tools that get used in some of my core libs.",
-  "require" : {
-    "php" : ">=7.0.0",
-    "psr/log" : "1.0.0"
-  },
-  "repositories" : [ {
-    "type" : "composer",
-    "url" : "https://packagist.org/"
-  } ],
-  "license" : "MIT",
-  "keywords" : [ "core", "functions", "toolbox" ],
-  "autoload" : {
-    "psr-0" : {
-      "Core\\Toolbox" : ""
-    }
-  },
-  "type" : "library",
-  "homepage" : "https://github.com/Tekkla/core-toolbox",
-  "authors" : [ {
-    "name" : "Michael Zorn",
-    "email" : "tekkla@tekkla.de",
-    "role" : "Developer"
-  } ]
+	"name" : "tekkla/core-toolbox",
+	"description" : "Toolbox of classes and function to check variables, manipulate arrays, do file actions and much more. It's a collection of tools that get used in some of my core libs.",
+	"require" : {
+		"php" : ">=7.0.0",
+		"psr/log" : ">=1.0.0"
+	},
+	"repositories" : [{
+			"type" : "composer",
+			"url" : "https://packagist.org/"
+		}
+	],
+	"license" : "MIT",
+	"keywords" : [
+		"core",
+		"functions",
+		"toolbox"
+	],
+	"autoload" : {
+		"psr-0" : {
+			"Core\\Toolbox" : ""
+		}
+	},
+	"type" : "library",
+	"homepage" : "https://github.com/Tekkla/core-toolbox",
+	"authors" : [{
+			"name" : "Michael Zorn",
+			"email" : "tekkla@tekkla.de",
+			"role" : "Developer"
+		}
+	],
+	"minimum-stability" : "dev"
 }
