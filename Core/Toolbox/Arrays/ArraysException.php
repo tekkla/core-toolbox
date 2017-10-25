@@ -10,6 +10,5 @@ namespace Core\Toolbox\Arrays;
  */
 class ArraysException extends \Exception
 {
-
 }
 
