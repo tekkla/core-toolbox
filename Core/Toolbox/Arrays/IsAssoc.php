@@ -8,7 +8,7 @@ namespace Core\Toolbox\Arrays;
  * @copyright 2016
  * @license MIT
  */
-class IsAssoc
+class IsAssoc extends AbstractArray
 {
 
     /**
