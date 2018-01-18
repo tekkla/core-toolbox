@@ -12,7 +12,7 @@ namespace Core\Toolbox\IO;
 class Sendfile extends AbstractFile
 {
     
-    use GetMimetypeTrait;
+    use GetMimeTypeTrait;
     
     /**
      * Files content type

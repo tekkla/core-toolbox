@@ -5,10 +5,10 @@ namespace Core\Toolbox\IO;
  * GetMimeTypeTrait.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
- * @copyright 2016
+ * @copyright 2016-2018
  * @license MIT
  */
-trait GetMimetypeTrait {
+trait GetMimeTypeTrait {
 
     /**
      * Returns the mime type of a file by analyzing it's extension
