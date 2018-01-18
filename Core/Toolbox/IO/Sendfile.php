@@ -1,6 +1,7 @@
 <?php
 namespace Core\Toolbox\IO;
 
+
 /**
  * Sendfile.php
  *
@@ -10,6 +11,9 @@ namespace Core\Toolbox\IO;
  */
 class Sendfile extends AbstractFile
 {
+    
+    use GetMimetypeTrait;
+    
     /**
      * Files content type
      *
