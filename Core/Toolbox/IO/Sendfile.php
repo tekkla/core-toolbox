@@ -20,28 +20,28 @@ class Sendfile extends AbstractFile
      * @var string
      */
     private $content_type = '';
-
+    
     /**
      * Send inline flag
      *
      * @var bool
      */
     private $inline = false;
-
+    
     /**
      * Optional name of file to send
      *
      * @var string
      */
     private $name = '';
-
+    
     /**
      * Download rate limiter
      *
      * @var int
      */
     private $download_rate = 0;
-
+    
     /**
      * Returns content type of file
      *
@@ -54,10 +54,10 @@ class Sendfile extends AbstractFile
         if (empty($this->content_type) && !empty($this->file)) {
             $this->content_type = $this->getMimeType($this->file);
         }
-
+        
         return $this->content_type;
     }
-
+    
     /**
      * Sets content type of file
      *
@@ -68,7 +68,7 @@ class Sendfile extends AbstractFile
     {
         $this->content_type = $content_type;
     }
-
+    
     /**
      * Returns files content disposition flag
      *
@@ -78,7 +78,7 @@ class Sendfile extends AbstractFile
     {
         return $this->inline;
     }
-
+    
     /**
      * Set files content disposition flag
      *
@@ -89,7 +89,7 @@ class Sendfile extends AbstractFile
     {
         $this->inline = $inline;
     }
-
+    
     /**
      * Returns set filenae
      *
@@ -99,17 +99,17 @@ class Sendfile extends AbstractFile
     {
         return $this->name ?? '';
     }
-
+    
     /**
      * Sets filename
-     * 
+     *
      * @param string $name
      */
     public function setName(string $name)
     {
         $this->name = $name;
     }
-
+    
     /**
      * Returns donwload rate of the file
      *
@@ -119,7 +119,7 @@ class Sendfile extends AbstractFile
     {
         return $this->download_rate;
     }
-
+    
     /**
      * Sets the download rate for this file
      *
@@ -132,66 +132,66 @@ class Sendfile extends AbstractFile
             $this->download_rate = $download_rate;
         }
     }
-
+    
     /**
      * Sends file to browser
      */
     public function send()
     {
-
+        
         // Check file exists!
         $file = new File($this->filename);
-
+        
         if (!$file->exists($this->logger)) {
             Throw new FileException(sprintf('File "%s" not found.'));
         }
-
-
+        
+        
         // No content type provided?
         if (empty($this->content_type)) {
-            $this->content_type = $this->getMimeType($this->file);
+            $this->content_type = $this->getMimeType($this->filename);
         }
-
+        
         // Do we have to find out the filename by our own?
         if (empty($this->name)) {
-            $this->name = basename($this->file);
+            $this->name = basename($this->filename);
         }
-
+        
         // Send headers
         $headers = [
             'Content-type: ' . $this->content_type,
             'Content-Disposition: ' . $this->inline ? 'inline' : 'attachement' . '; filename="' . $this->name . '"',
             'Content-Transfer-Encoding: binary',
-            'Content-Length: ' . filesize($this->file),
+            'Content-Length: ' . filesize($this->filename),
             'Accept-Ranges: bytes'
         ];
-
+        
         foreach ($headers as $header) {
             header($header);
         }
-
+        
         if ($this->download_rate > 0) {
-
+            
             flush();
-
+            
             // Open file
-            $stream = fopen($this->file, "r");
-
+            $stream = fopen($this->filename, "r");
+            
             while (!feof($stream)) {
-
+                
                 // Send current file part to the browser
                 print fread($stream, round($this->download_rate * 1024));
-
+                
                 // Flush content to the browser
                 flush();
-
+                
                 // Sleep one second
                 sleep(1);
             }
-            fclose($this->file);
+            fclose($this->filename);
         }
         else {
-            readfile($this->file);
+            readfile($this->filename);
             exit();
         }
     }
