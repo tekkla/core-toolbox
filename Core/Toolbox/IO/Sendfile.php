@@ -5,7 +5,7 @@ namespace Core\Toolbox\IO;
  * Sendfile.php
  *
  * @author Michael "Tekkla" Zorn <tekkla@tekkla.de>
- * @copyright 2016
+ * @copyright 2016-2018
  * @license MIT
  */
 class Sendfile extends AbstractFile
@@ -39,18 +39,11 @@ class Sendfile extends AbstractFile
     private $download_rate = 0;
 
     /**
-     * Optional logging service
-     *
-     * @var LoggerInterface
-     */
-    private $logger = null;
-
-    /**
      * Returns content type of file
      *
      * Tries to autodetect content type when no type is set.
      *
-     * @return the $content_type
+     * @return string
      */
     public function getContentType(): string
     {
@@ -67,7 +60,7 @@ class Sendfile extends AbstractFile
      * @param string $content_type
      *            The content type of file
      */
-    public function setContentType($content_type)
+    public function setContentType(string $content_type)
     {
         $this->content_type = $content_type;
     }
@@ -94,19 +87,21 @@ class Sendfile extends AbstractFile
     }
 
     /**
+     * Returns set filenae
      *
-     * @return the $name
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**
-     *
+     * Sets filename
+     * 
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
